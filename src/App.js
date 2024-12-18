@@ -83,35 +83,60 @@ function Navbar({ movies }) {
 }
 
 function Main({ movies }) {
+  const [watched, setWatched] = useState(tempWatchedData);
+
   return (
     <main className="main">
-      <ListBox movies={movies} />
-      <WatchedBox />
+      {" "}
+      <Box movies={movies} />
+      <Box>
+        <WatchedSummary watched={watched} />
+        <WatchedMovieList watched={watched} />
+      </Box>
     </main>
   );
 }
 
-function WatchedBox() {
-  const [isOpen2, setIsOpen2] = useState(true);
+function Box({ movies }) {
+  const [isOpen, setIsOpen] = useState(true);
 
-  const [watched, setWatched] = useState(tempWatchedData);
   return (
     <div className="box">
-      <button
-        className="btn-toggle"
-        onClick={() => setIsOpen2((open) => !open)}
-      >
-        {isOpen2 ? "–" : "+"}
+      <button className="btn-toggle" onClick={() => setIsOpen((open) => !open)}>
+        {isOpen ? "–" : "+"}
       </button>
-      {isOpen2 && (
-        <>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
-        </>
+      {isOpen && (
+        <ul className="list">
+          {movies?.map((movie) => (
+            <Movie movie={movie} key={movie.imdbID} />
+          ))}
+        </ul>
       )}
     </div>
   );
 }
+
+// function WatchedBox() {
+//   const [isOpen2, setIsOpen2] = useState(true);
+
+//   const [watched, setWatched] = useState(tempWatchedData);
+//   return (
+//     <div className="box">
+//       <button
+//         className="btn-toggle"
+//         onClick={() => setIsOpen2((open) => !open)}
+//       >
+//         {isOpen2 ? "–" : "+"}
+//       </button>
+//       {isOpen2 && (
+//         <>
+//           <WatchedSummary watched={watched} />
+//           <WatchedMovieList watched={watched} />
+//         </>
+//       )}
+//     </div>
+//   );
+// }
 
 function WatchedMovieList({ watched }) {
   return (
@@ -171,28 +196,6 @@ function WatchedSummary({ watched }) {
           <span>{avgRuntime} min</span>
         </p>
       </div>
-    </div>
-  );
-}
-
-function ListBox({ movies }) {
-  const [isOpen1, setIsOpen1] = useState(true);
-
-  return (
-    <div className="box">
-      <button
-        className="btn-toggle"
-        onClick={() => setIsOpen1((open) => !open)}
-      >
-        {isOpen1 ? "–" : "+"}
-      </button>
-      {isOpen1 && (
-        <ul className="list">
-          {movies?.map((movie) => (
-            <Movie movie={movie} key={movie.imdbID} />
-          ))}
-        </ul>
-      )}
     </div>
   );
 }
