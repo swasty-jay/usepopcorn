@@ -27,9 +27,10 @@ export default function StarRatting({ maxRating = 5 }) {
 }
 
 const svgStyle = {
-  width: "28px",
-  height: "28px",
+  width: "48px",
+  height: "48px",
   display: "block",
+  cursor: "pointer",
 };
 
 function Star() {
