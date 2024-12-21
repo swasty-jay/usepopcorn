@@ -30,7 +30,6 @@ const svgStyle = {
   width: "28px",
   height: "28px",
   display: "block",
-  cursor: "pointer",
 };
 
 function Star() {
