@@ -10,16 +10,24 @@ const Starstyle = {
   display: " flex",
 };
 
+// StarRatting.prototype = {
+//   maxRating: PropTypes.number,
+// };
+
 export default function StarRatting({
   maxRating = 5,
   color = "#fcc419",
   size = 48,
+  Message = [],
+  DefaultRating = 0,
+  onsetRating,
 }) {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(DefaultRating);
   const [tempRating, setTempRating] = useState(0);
 
   function HandleRating(rating) {
     setRating(rating);
+    onsetRating(rating);
   }
 
   const TextStyle = {
