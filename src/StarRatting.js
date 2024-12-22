@@ -28,13 +28,13 @@ export default function StarRatting({ maxRating = 5 }) {
           <Star
             key={i}
             onRate={() => HandleRating(i + 1)}
-            full={rating >= i + 1}
+            full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
             OnHoverIn={() => setTempRating(i + 1)}
             OnHoverOut={() => setTempRating(0)}
           />
         ))}
       </div>
-      <p style={TextStyle}>{tempRating || ""}</p>
+      <p style={TextStyle}>{tempRating || rating || ""}</p>
     </div>
   );
 }
