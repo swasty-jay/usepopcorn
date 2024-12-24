@@ -54,10 +54,10 @@ const KEY = "3b427916";
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
-
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const Query = "interstellar";
+  const Query = "things from the future";
 
   useEffect(function () {
     async function getMovies() {
@@ -71,10 +71,12 @@ export default function App() {
         if (!res.ok)
           throw new Error("Something went wrong with fetching movies");
         const data = await res.json();
+        if (data.Response === "False") throw new Error("Movie not found");
         setMovies(data.Search);
-        setIsLoading(false);
       } catch (err) {
-        console.error(err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
       }
     }
     getMovies();
@@ -87,7 +89,11 @@ export default function App() {
         <NumResults movies={movies} />
       </Navbar>
       <Main>
-        <Box> {isLoading ? <Loader /> : <MovieList movies={movies} />} </Box>
+        <Box>
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}{" "}
+          {error && <ErrorMessage message={error} />}
+        </Box>
 
         {/* REAUSABLE BOX */}
         <Box>
@@ -102,6 +108,15 @@ export default function App() {
 function Loader() {
   return <p className="loader">Loading...</p>;
 }
+
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>⛔</span> {message}
+    </p>
+  );
+}
+
 function Navbar({ children }) {
   return (
     <nav className="nav-bar">
