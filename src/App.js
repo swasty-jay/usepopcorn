@@ -57,7 +57,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const Query = "things from the future";
+  const Query = "Avengers";
 
   useEffect(function () {
     async function getMovies() {
