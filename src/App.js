@@ -55,11 +55,18 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
 
+  const Query = "interstellar";
+
   useEffect(function () {
-    fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-      .then((res) => res.json())
-      .then((data) => setMovies(data.Search)); //.then(data=>console.log(data.Search))
-  }, []);
+    async function getMovies() {
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${KEY}&s=${Query}`
+      );
+      const data = await res.json();
+      setMovies(data.Search);
+    }
+    getMovies();
+  });
 
   return (
     <>
