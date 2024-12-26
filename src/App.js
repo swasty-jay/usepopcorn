@@ -61,28 +61,36 @@ export default function App() {
 
   const TemQuery = "Avengers";
 
-  useEffect(function () {
-    async function getMovies() {
-      try {
-        setIsLoading(true);
+  useEffect(
+    function () {
+      async function getMovies() {
+        try {
+          setIsLoading(true);
+          setError("");
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          );
 
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${TemQuery}`
-        );
-
-        if (!res.ok)
-          throw new Error("Something went wrong with fetching movies");
-        const data = await res.json();
-        if (data.Response === "False") throw new Error("Movie not found");
-        setMovies(data.Search);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+          if (!res.ok)
+            throw new Error("Something went wrong with fetching movies");
+          const data = await res.json();
+          if (data.Response === "False") throw new Error("Movie not found");
+          setMovies(data.Search);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+        if (query.length < 3) {
+          setMovies([]);
+          setError("");
+          return;
+        }
       }
-    }
-    getMovies();
-  }, []);
+      getMovies();
+    },
+    [query]
+  );
 
   return (
     <>
