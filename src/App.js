@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import StarRatting from "./StarRatting";
 
 const tempMovieData = [
   {
@@ -259,7 +260,6 @@ function MovieDetails({ selectedId, onCloseMovie }) {
 
   const {
     Title: title,
-    Year: year,
     Poster: poster,
     Runtime: runtime,
     imdbRating,
@@ -279,8 +279,8 @@ function MovieDetails({ selectedId, onCloseMovie }) {
         );
         const data = await res.json();
         setMovie(data);
+        setIsLoading(false);
       }
-      setIsLoading(false);
       GetMovieDetails();
     },
     [selectedId]
@@ -290,10 +290,10 @@ function MovieDetails({ selectedId, onCloseMovie }) {
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <div>
           <header>
             {/* DISPLAYING THE MOVIE DETAILS */}
-            <button className="btn-back" onclick={onCloseMovie}>
+            <button className="btn-back" onClick={onCloseMovie}>
               &larr;
             </button>
             <img src={poster} alt={`poster of ${movie} movie`} />
@@ -311,13 +311,16 @@ function MovieDetails({ selectedId, onCloseMovie }) {
           </header>
 
           <section>
+            <div className="rating">
+              <StarRatting maxRating={10} size={24} />
+            </div>
             <p>
               <em>{plot}</em>
             </p>
             <p>starring {actors}</p>
             <p>Directed by {director}</p>
           </section>
-        </>
+        </div>
       )}
     </div>
   );
