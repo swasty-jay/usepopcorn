@@ -303,6 +303,12 @@ function MovieDetails({ selectedId, onCloseMovie, watched, onAddWatched }) {
     },
     [selectedId]
   );
+  /////////Dinamically changing movie tittle////////////
+  useEffect(() => {
+    if (!title) return;
+    document.title = `movie | ${title}`;
+  }, [title]);
+
   return (
     <div className="details">
       {isLoading ? (
