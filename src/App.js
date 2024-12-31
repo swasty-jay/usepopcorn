@@ -202,29 +202,6 @@ function Box({ children }) {
     </div>
   );
 }
-/*
-function WatchedBox() {
-  const [isOpen2, setIsOpen2] = useState(true);
-
-  const [watched, setWatched] = useState(tempWatchedData);
-  return (
-    <div className="box">
-      <button
-        className="btn-toggle"
-        onClick={() => setIsOpen2((open) => !open)}
-      >
-        {isOpen2 ? "–" : "+"}
-      </button>
-      {isOpen2 && (
-        <>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
-        </>
-      )}
-    </div>
-  );
-}
-*/
 
 function WatchedMovieList({ watched }) {
   return (
@@ -285,7 +262,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
       runtime: Number(runtime.split("").at(0)),
       poster,
       imdbRating: Number(imdbRating),
-      onSetRating,
+      userRating,
     };
     onAddWatched(newWatchedmovie);
     onCloseMovie();
@@ -335,7 +312,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
               <StarRatting
                 maxRating={10}
                 size={24}
-                onSetRating={setUserRating}
+                onsetRating={setUserRating}
               />
               {userRating > 0 && (
                 <button className="btn-add" onClick={HandleAdd}>
