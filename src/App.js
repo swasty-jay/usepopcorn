@@ -72,12 +72,14 @@ export default function App() {
   };
   useEffect(
     function () {
+      const controller = new AbortController();
       async function getMovies() {
         try {
           setIsLoading(true);
           setError("");
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal }
           );
 
           if (!res.ok)
@@ -85,8 +87,11 @@ export default function App() {
           const data = await res.json();
           if (data.Response === "False") throw new Error("Movie not found");
           setMovies(data.Search);
+          setError("");
         } catch (err) {
-          setError(err.message);
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -97,6 +102,9 @@ export default function App() {
         }
       }
       getMovies();
+      return () => {
+        controller.abort();
+      };
     },
     [query]
   );
@@ -307,6 +315,11 @@ function MovieDetails({ selectedId, onCloseMovie, watched, onAddWatched }) {
   useEffect(() => {
     if (!title) return;
     document.title = `movie | ${title}`;
+
+    ////////Clean-up function///////
+    return () => {
+      document.title = "Usepopcorn";
+    };
   }, [title]);
 
   return (
