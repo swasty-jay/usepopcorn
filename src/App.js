@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRatting from "./StarRatting";
 
 const average = (arr) =>
@@ -8,10 +8,13 @@ const KEY = "3b427916";
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [watched, setWatched] = useState(() => {
+    const StoredValue = localStorage.setItem("watched");
+    return JSON.parse(StoredValue);
+  });
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -24,7 +27,9 @@ export default function App() {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   };
 
-  //adding Click event////////
+  useEffect(() => {
+    localStorage.setItem("watched".JSON.stringify(watched));
+  }, [watched]);
 
   useEffect(
     function () {
@@ -68,6 +73,7 @@ export default function App() {
 
   function HandleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
+    // localStorage.setItem("watched".JSON.stringify([...watched, movie]));
   }
 
   return (
@@ -147,6 +153,28 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
+  /////BEST WAY OF DOING IT USING [USEREF]//////
+
+  const inputEl = useRef(null);
+
+  useEffect(() => {
+    if (document.activeElement === inputEl.current) return;
+    function callback(e) {
+      if (e.code === "Enter") {
+        inputEl.current.focus();
+        setQuery("");
+      }
+    }
+    document.addEventListener("keydown", callback);
+    return () => document.addEventListener("keydown", callback);
+  }, [setQuery]);
+
+  ///BAD WAY OF SELECTING DOM ELEMENTS IN REACT/////////
+  // useEffect(() => {
+  //   const el = document.querySelector(".search");
+  //   el.focus();
+  // }, []);
+
   return (
     <input
       className="search"
@@ -154,6 +182,7 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
