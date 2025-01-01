@@ -6,7 +6,7 @@ const average = (arr) =>
 const KEY = "3b427916";
 
 export default function App() {
-  const [query, setQuery] = useState("inception");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [error, setError] = useState("");
@@ -23,6 +23,9 @@ export default function App() {
   const HanddleDeletWatch = (id) => {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   };
+
+  //adding Click event////////
+
   useEffect(
     function () {
       const controller = new AbortController();
@@ -54,6 +57,7 @@ export default function App() {
           return;
         }
       }
+      handleCloseMovie();
       getMovies();
       return () => {
         controller.abort();
@@ -249,6 +253,20 @@ function MovieDetails({ selectedId, onCloseMovie, watched, onAddWatched }) {
     onAddWatched(newWatchedmovie);
     onCloseMovie();
   }
+
+  useEffect(() => {
+    function callback(e) {
+      if (e.code === "Escape") {
+        onCloseMovie();
+      }
+    }
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [onCloseMovie]);
+
   useEffect(
     function () {
       async function GetMovieDetails() {
